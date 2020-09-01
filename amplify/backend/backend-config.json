@@ -1,11 +1,5 @@
 {
-	"auth": {
-		"tvh4314fd4e": {
-			"service": "Cognito",
-			"providerPlugin": "awscloudformation",
-			"dependsOn": []
-		}
-	},
+	"auth": {},
 	"hosting": {
 		"amplifyhosting": {
 			"service": "amplifyhosting",
