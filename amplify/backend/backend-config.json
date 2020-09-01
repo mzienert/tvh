@@ -1,5 +1,11 @@
 {
-	"auth": {},
+	"auth": {
+		"tvhbd9bac74bd9bac74": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": []
+		}
+	},
 	"hosting": {
 		"amplifyhosting": {
 			"service": "amplifyhosting",
