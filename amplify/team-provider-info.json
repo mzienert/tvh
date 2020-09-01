@@ -12,14 +12,14 @@
             "AmplifyAppId": "d2hu7txp9echde"
         },
         "categories": {
-            "auth": {
-                "tvh0eabf22b": {}
-            },
             "hosting": {
                 "amplifyhosting": {
                     "appId": "d2hu7txp9echde",
                     "type": "cicd"
                 }
+            },
+            "auth": {
+                "tvh4314fd4e": {}
             }
         }
     }

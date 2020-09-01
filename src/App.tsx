@@ -65,19 +65,3 @@ export default connect(
     mapStateToProps,
     mapDispatchToProps,
 )(App);
-
-/*
-<UserContext.Provider value={undefined}>
-    <div className="App">
-        <UserContext.Consumer>
-            {value => {
-                if (typeof value != 'undefined') {
-                    return (
-                        <Header />
-                    )
-                }
-            }}
-        </UserContext.Consumer>
-        <LoginCard />
-    </div>
-</UserContext.Provider>*/
