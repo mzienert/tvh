@@ -1,0 +1,26 @@
+{
+    "dev": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-tvh-dev-205639-authRole",
+            "UnauthRoleArn": "arn:aws:iam::153218834330:role/amplify-tvh-dev-205639-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::153218834330:role/amplify-tvh-dev-205639-authRole",
+            "Region": "us-west-2",
+            "DeploymentBucketName": "amplify-tvh-dev-205639-deployment",
+            "UnauthRoleName": "amplify-tvh-dev-205639-unauthRole",
+            "StackName": "amplify-tvh-dev-205639",
+            "StackId": "arn:aws:cloudformation:us-west-2:153218834330:stack/amplify-tvh-dev-205639/9f0f2400-d859-11ea-bd01-06dcc415e08a",
+            "AmplifyAppId": "d2hu7txp9echde"
+        },
+        "categories": {
+            "auth": {
+                "tvh0eabf22b": {}
+            },
+            "hosting": {
+                "amplifyhosting": {
+                    "appId": "d2hu7txp9echde",
+                    "type": "cicd"
+                }
+            }
+        }
+    }
+}

@@ -1,26 +1,83 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {Component} from 'react';
+import { connect } from 'react-redux';
 import './App.css';
+import { Header } from './components/header';
+import Login from "./components/login";
+import {getCurrentAuthUser} from "./services/auth";
+import {userHasAuthenticated} from "./redux/actions";
+import SuccessSnackbar from './components/Snackbar/SuccessSnackbar';
+import LinearProgress from "@material-ui/core/LinearProgress";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+interface AppProps {
+    isAuthenticated: boolean,
+    updateAuth: Function,
+    isLoading: boolean,
 }
 
-export default App;
+interface AppState { }
+
+const checkUserAuth = (props: AppProps) => {
+    getCurrentAuthUser().then(user => {
+        if (user !== 'not authenticated') {
+            props.updateAuth();
+        }
+    });
+}
+
+export class App extends Component<AppProps, AppState> {
+  constructor(props: AppProps) {
+      super(props);
+      checkUserAuth(this.props);
+  }
+
+  render () {
+    const {
+        isAuthenticated,
+        isLoading,
+    } = this.props;
+
+    return (
+        <div>
+            { isLoading ? <LinearProgress /> : null }
+            { !isAuthenticated && <Login/> }
+            { isAuthenticated && <Header /> }
+            <SuccessSnackbar />
+        </div>
+    )
+  }
+}
+
+
+const mapStateToProps = (state: any) => {
+    return ({
+        isAuthenticated: state.auth.isAuthenticated,
+        isLoading: state.ui.isLoading,
+    });
+}
+
+const mapDispatchToProps = (dispatch: any) => {
+    return {
+        updateAuth: () => dispatch(userHasAuthenticated(true))
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(App);
+
+/*
+<UserContext.Provider value={undefined}>
+    <div className="App">
+        <UserContext.Consumer>
+            {value => {
+                if (typeof value != 'undefined') {
+                    return (
+                        <Header />
+                    )
+                }
+            }}
+        </UserContext.Consumer>
+        <LoginCard />
+    </div>
+</UserContext.Provider>*/
