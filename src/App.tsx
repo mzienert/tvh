@@ -1,12 +1,13 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import './App.css';
-import { Header } from './components/header';
-import Login from "./components/login";
-import {getCurrentAuthUser} from "./services/auth";
-import {userHasAuthenticated} from "./redux/actions";
+import { Container } from "./components/Container";
+import Login from "./components/Login";
+import { getCurrentAuthUser } from "./services/auth";
+import { userHasAuthenticated } from "./redux/actions";
 import SuccessSnackbar from './components/Snackbar/SuccessSnackbar';
 import LinearProgress from "@material-ui/core/LinearProgress";
+import { BrowserRouter as Router } from "react-router-dom";
 
 interface AppProps {
     isAuthenticated: boolean,
@@ -40,7 +41,7 @@ export class App extends Component<AppProps, AppState> {
         <div>
             { isLoading ? <LinearProgress /> : null }
             { !isAuthenticated && <Login/> }
-            { isAuthenticated && <Header /> }
+            { isAuthenticated && <Router><Container /></Router> }
             <SuccessSnackbar />
         </div>
     )
