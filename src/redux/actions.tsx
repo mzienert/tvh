@@ -2,7 +2,9 @@ import {
     SNACKBAR_CLEAR,
     USER_HAS_AUTHENTICATED,
     SNACKBAR_SUCCESS,
-    LOADING_BAR
+    LOADING_BAR,
+    ALERT_DIALOG,
+    FORM_DIALOG
 } from "./actionTypes";
 
 export const userHasAuthenticated = (isAuthenticated: boolean) => ({
@@ -27,3 +29,11 @@ export const clearSnackbar = () => ({
 export const setLoading = () => ({
     type: LOADING_BAR
 });
+
+export const alertDialog = () => ({
+    type: ALERT_DIALOG
+})
+
+export const formDialog = () => ({
+    type: FORM_DIALOG
+})

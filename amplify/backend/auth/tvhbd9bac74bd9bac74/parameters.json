@@ -1,4 +1,6 @@
 {
+    "identityPoolName": "tvhbd9bac74bd9bac74_identitypool_e33824a4",
+    "allowUnauthenticatedIdentities": false,
     "resourceNameTruncated": "tvhbd9bd9bac74",
     "userPoolName": "tvhbd9bac74_userpool_bd9bac74",
     "autoVerifiedAttributes": [
@@ -29,7 +31,7 @@
     "userpoolClientLambdaRole": "tvhbd9bd9bac74_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
     "useDefault": "manual",
-    "authSelections": "userPoolOnly",
+    "authSelections": "identityPoolAndUserPool",
     "resourceName": "tvhbd9bac74bd9bac74",
     "usernameAttributes": [
         "email"

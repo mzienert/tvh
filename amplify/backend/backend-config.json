@@ -11,5 +11,11 @@
 			"service": "amplifyhosting",
 			"type": "cicd"
 		}
+	},
+	"storage": {
+		"s3b4ce3994": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation"
+		}
 	}
 }

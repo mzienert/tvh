@@ -1,7 +1,9 @@
 import {
     SNACKBAR_SUCCESS,
     SNACKBAR_CLEAR,
-    LOADING_BAR
+    LOADING_BAR,
+    ALERT_DIALOG,
+    FORM_DIALOG
 } from "../actionTypes";
 
 const initialState = {
@@ -9,6 +11,8 @@ const initialState = {
     snackbarMessage: null,
     snackbarType: null,
     isLoading: false,
+    alertDialogOpen: false,
+    formDialogOpen: false,
 };
 
 export default function(state = initialState, action: any) {
@@ -32,6 +36,16 @@ export default function(state = initialState, action: any) {
             return {
                 ...state,
                 isLoading: !state.isLoading,
+            }
+        case ALERT_DIALOG:
+            return {
+                ...state,
+                alertDialogOpen: !state.alertDialogOpen
+            }
+        case FORM_DIALOG:
+            return {
+                ...state,
+                formDialogOpen: !state.formDialogOpen
             }
         default:
             return state;
