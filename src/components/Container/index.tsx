@@ -27,6 +27,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Hidden from '@material-ui/core/Hidden';
 import CloseIcon from '@material-ui/icons/Close';
 import { Minutes } from '../Minutes';
+import { Documents } from '../Documents';
 import './container.css';
 
 const drawerWidth = 240;
@@ -80,10 +81,6 @@ function Home() {
 
 function About() {
     return <h2>About</h2>;
-}
-
-function Users() {
-    return <h2>Users</h2>;
 }
 
 export const Container = () => {
@@ -179,7 +176,7 @@ export const Container = () => {
                         <Minutes />
                     </Route>
                     <Route path="/documents">
-                        <Users />
+                        <Documents />
                     </Route>
                     <Route path="/directory">
                         <Home />

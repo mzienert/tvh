@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-export const Minutes = () => {
+export const Documents = () => {
     const dispatch = useDispatch();
     const classes = useStyles();
 
@@ -55,7 +55,7 @@ export const Minutes = () => {
             ...state,
             loadingFiles: true
         });
-        listFiles('minutes')
+        listFiles('documents')
             .then(res => setState({
                 ...state,
                 files: res,
@@ -77,15 +77,15 @@ export const Minutes = () => {
 
     const alertDialogProps: AlertDialogProps = {
         message: 'This will peremanently delete this file.  Are you sure you want to do this?',
-        title: 'Delete Minutes Files',
+        title: 'Delete Document Files',
         file: state.deleteFile,
         fileList,
     }
     const formDialogProps: FormDialogProps = {
-        message: 'Add a record of minutes by uploading a file.  Date will be set upon upload.',
-        title: 'Upload Minutes File',
+        message: 'Add a document by uploading a file.  Date will be set upon upload.',
+        title: 'Upload Document File',
         fileList,
-        path: 'minutes',
+        path: 'documents',
     }
 
     const uploadFile = () => {

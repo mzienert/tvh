@@ -78,9 +78,9 @@ export const FormDialog = (props: FormDialogProps) => {
         dispatch(formDialog());
     };
 
-    const handleSave = async () => {
+    const handleSave = async (path: string) => {
         dispatch(setLoading());
-        addFiles(state.files[0]).then(res => {
+        addFiles(state.files[0], path).then(res => {
             const fileName = res.key.split('/');
             dispatch(setLoading());
             dispatch(formDialog());
@@ -116,7 +116,7 @@ export const FormDialog = (props: FormDialogProps) => {
                         Cancel
                     </Button>
                     <div className={classes.wrapper}>
-                    <Button onClick={handleSave}
+                    <Button onClick={() => {handleSave(props.path)}}
                             variant="contained"
                             color="primary"
                             disabled={isLoading || !state.files.length}
