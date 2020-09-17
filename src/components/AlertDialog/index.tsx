@@ -26,6 +26,7 @@ export const AlertDialog = (props: AlertDialogProps) => {
         deleteFile(props.file)
             .then(res => {
                 dispatch(showSnackbar(`${fileName[1]} has been deleted`, 'info'));
+                props.fileList();
             })
             .catch(e => {
                 dispatch(showSnackbar(e.message, 'error'));
@@ -47,11 +48,15 @@ export const AlertDialog = (props: AlertDialogProps) => {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="primary">
-                        Disagree
+                    <Button onClick={handleClose}
+                            variant="contained"
+                            color="secondary">
+                        Cancel
                     </Button>
-                    <Button onClick={fileDelete} color="primary" autoFocus>
-                        Agree
+                    <Button onClick={fileDelete}
+                            variant="contained"
+                            color="primary">
+                        Delete
                     </Button>
                 </DialogActions>
             </Dialog>

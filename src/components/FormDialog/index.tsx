@@ -1,4 +1,4 @@
-import React, {Component, useState} from 'react';
+import React, { useState } from 'react';
 import { DropzoneArea } from 'material-ui-dropzone';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -6,18 +6,63 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { useDispatch, useSelector } from "react-redux";
-import { formDialog } from "../../redux/actions";
-//import { DialogProps } from "./AlertDialog.d";
-import { deleteFile } from "../../services/storage";
-import TextField from '@material-ui/core/TextField';
+import {
+    useDispatch,
+    useSelector
+} from "react-redux";
+import {
+    formDialog,
+    setLoading,
+    showSnackbar,
+} from "../../redux/actions";
 import { FormDialogProps } from "./FormDialogProps.d";
 import { addFiles } from '../../services/storage';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import {
+    createStyles,
+    makeStyles,
+    Theme
+} from '@material-ui/core/styles';
+import { green } from '@material-ui/core/colors';
 
+const useStyles = makeStyles((theme: Theme) =>
+    createStyles({
+        root: {
+            display: 'flex',
+            alignItems: 'center',
+        },
+        wrapper: {
+            margin: theme.spacing(1),
+            position: 'relative',
+        },
+        buttonSuccess: {
+            backgroundColor: green[500],
+            '&:hover': {
+                backgroundColor: green[700],
+            },
+        },
+        fabProgress: {
+            color: green[500],
+            position: 'absolute',
+            top: -6,
+            left: -6,
+            zIndex: 1,
+        },
+        buttonProgress: {
+            color: green[500],
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            marginTop: -12,
+            marginLeft: -12,
+        },
+    }),
+);
 
 export const FormDialog = (props: FormDialogProps) => {
     const dispatch = useDispatch();
-    const { formDialogOpen } = useSelector(
+    const classes = useStyles();
+    const { formDialogOpen, isLoading } = useSelector(
         (state: any) => state.ui
     );
 
@@ -27,18 +72,23 @@ export const FormDialog = (props: FormDialogProps) => {
 
     const handleChange = (files: any) => {
         setState({...state, files: files});
-    }
+    };
 
     const handleClose = () => {
         dispatch(formDialog());
     };
 
-    const handleSave = () => {
-        addFiles(state.files[0]).then(res => console.log('res: ', res))
-        console.log('state.files: ', state.files);
-    }
+    const handleSave = async () => {
+        dispatch(setLoading());
+        addFiles(state.files[0]).then(res => {
+            const fileName = res.key.split('/');
+            dispatch(setLoading());
+            dispatch(formDialog());
+            dispatch(showSnackbar(`File ${fileName[1]} has been uploaded`, 'info'));
+            props.fileList();
+        });
+    };
 
-    //console.log('state.files: ', state.files);
     return (
         <div>
             <Dialog
@@ -59,12 +109,22 @@ export const FormDialog = (props: FormDialogProps) => {
                     />
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleClose} color="primary">
+                    <Button onClick={handleClose}
+                            variant="contained"
+                            color="secondary"
+                    >
                         Cancel
                     </Button>
-                    <Button onClick={handleSave} color="primary">
-                        Subscribe
+                    <div className={classes.wrapper}>
+                    <Button onClick={handleSave}
+                            variant="contained"
+                            color="primary"
+                            disabled={isLoading || !state.files.length}
+                    >
+                        Upload
                     </Button>
+                    {isLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
+                    </div>
                 </DialogActions>
             </Dialog>
         </div>

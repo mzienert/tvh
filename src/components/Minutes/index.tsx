@@ -14,7 +14,7 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import { AlertDialog } from '../AlertDialog';
-import { useDispatch } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { alertDialog } from "../../redux/actions";
 import { formDialog } from "../../redux/actions";
 import { FormDialog } from "../FormDialog";
@@ -43,30 +43,53 @@ const useStyles = makeStyles((theme: Theme) =>
 export const Minutes = () => {
     const dispatch = useDispatch();
     const classes = useStyles();
+
     const [state, setState] = useState<any>({
         files: [],
         deleteFile: null,
+        loadingFiles: false,
     });
 
-    const fileList = async () => await listFiles('minutes');
+    const fileList = () => {
+        setState({
+            ...state,
+            loadingFiles: true
+        });
+        listFiles('minutes')
+            .then(res => setState({
+                ...state,
+                files: res,
+                loadingFiles: false
+            }));
+    };
+
     const handleClickOpen = (file: string) => {
-        setState({...state, deleteFile: file});
+        setState({
+            ...state,
+            deleteFile: file
+        });
         dispatch(alertDialog());
     };
+
+    useEffect(() => {
+        fileList();
+    }, []);
 
     const alertDialogProps: AlertDialogProps = {
         message: 'This will peremanently delete this file.  Are you sure you want to do this?',
         title: 'Delete Minutes Files',
         file: state.deleteFile,
+        fileList,
     }
     const formDialogProps: FormDialogProps = {
         message: 'Add a record of minutes by uploading a file.  Date will be set upon upload.',
         title: 'Upload Minutes File',
+        fileList
     }
 
     const uploadFile = () => {
         dispatch(formDialog());
-    }
+    };
 
     const displaySkeleton = () => (
         <div>
@@ -78,11 +101,11 @@ export const Minutes = () => {
     );
 
     const displayList = () => {
-        if (!state.files.length) {
+        if (state.files.length === 1 ) {
             return (
                 <p>There are no files.</p>
             )
-        }
+        };
 
         return (
             <List component="nav" aria-label="secondary mailbox folders">
@@ -90,46 +113,46 @@ export const Minutes = () => {
                     const fileSize = file.size / 1024 / 1024;
                     const fileName = file.key.split('/');
                     const fileNameNoExtension = fileName[1].split('.');
-                    const date = file.lastModified.toLocaleDateString()
+                    const date = file.lastModified.toLocaleDateString();
                     return (
-                        <ListItem button>
+                        <ListItem button
+                                  key={fileNameNoExtension[0]}
+                        >
                             <ListItemIcon>
                                 <DescriptionIcon/>
                             </ListItemIcon>
                             <ListItemText primary={fileNameNoExtension[0]}
-                                          secondary={`Date: ${date} | File Size: ${fileSize.toFixed(2)} MB`}/>
+                                          secondary={`Date: ${date} | File Size: ${fileSize.toFixed(2)} MB`}
+                            />
                             <ListItemSecondaryAction>
-                                <IconButton edge="end" aria-label="delete">
-                                    <DeleteIcon onClick={() => handleClickOpen(file.key)}/>
+                                <IconButton edge="end"
+                                            aria-label="delete"
+                                            onClick={() => handleClickOpen(file.key)}
+                                >
+                                    <DeleteIcon />
                                 </IconButton>
                             </ListItemSecondaryAction>
                         </ListItem>
-                    )
+                    );
                 })}
             </List>
-        )
+        );
     };
-
-    useEffect(() => {
-        fileList().then(res => setState({...state, files: res}))
-    }, []);
 
     return (
         <Paper className={classes.paper}>
-            <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                startIcon={<CloudUploadIcon />}
-                onClick={uploadFile}
+            <Button variant="contained"
+                    color="primary"
+                    className={classes.button}
+                    startIcon={<CloudUploadIcon />}
+                    onClick={uploadFile}
             >
                 Upload
             </Button>
             <Divider />
-            {state.files.length ? displayList() : displaySkeleton()}
+            {!state.loadingFiles ? displayList() : displaySkeleton()}
             <AlertDialog {...alertDialogProps} />
             <FormDialog {...formDialogProps} />
         </Paper>
-    )
-
-}
+    );
+};

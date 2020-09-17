@@ -99,7 +99,7 @@ export const Container = () => {
             <div>
                 <List>
                     {topNavButtons.map((button, index) => (
-                        <Link to={button.path}>
+                        <Link to={button.path} key={button.text}>
                             <ListItem button key={button.text}>
                                 <ListItemIcon>{button.icon}</ListItemIcon>
                                 <ListItemText primary={button.text} />

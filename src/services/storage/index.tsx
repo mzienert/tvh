@@ -10,7 +10,8 @@ export const deleteFile = async (file: string) => {
     return Storage.remove(file).catch(e => e);
 }
 
-export const addFiles = async (file: string) => {
-    return Storage.put('minutes/Matt.jpg', file).catch(e => e);
+export const addFiles = async (file: any) => {
+    console.log('file: ', file.name);
+    return Storage.put(`minutes/${file.name}`, file).catch(e => e);
 }
 

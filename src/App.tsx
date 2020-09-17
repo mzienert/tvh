@@ -39,9 +39,9 @@ export class App extends Component<AppProps, AppState> {
 
     return (
         <div>
-            { isLoading ? <LinearProgress /> : null }
+            { isLoading ? <LinearProgress className="progress"/> : null }
             { !isAuthenticated && <Login/> }
-            { isAuthenticated && <Router><Container /></Router> }
+            { isAuthenticated && <div className="container"><Router><Container /></Router></div> }
             <SuccessSnackbar />
         </div>
     )

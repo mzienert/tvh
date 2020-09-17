@@ -28,4 +28,11 @@
   color: #61dafb;
 }
 
+.progress {
+  z-index: 999;
+}
+.container {
+  position: fixed;
+  width: 100%;
+}
 
