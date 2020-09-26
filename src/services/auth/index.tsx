@@ -27,3 +27,6 @@ export const getCurrentAuthUser = async () => {
     }
 }
 
+export const userLogout = async () => {
+    return await Auth.signOut().catch(e => e);
+}

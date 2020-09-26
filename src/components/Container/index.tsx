@@ -2,7 +2,8 @@ import React from 'react';
 import {
     Switch,
     Route,
-    Link
+    Link,
+    useHistory
 } from "react-router-dom";
 import {
     makeStyles,
@@ -29,6 +30,9 @@ import CloseIcon from '@material-ui/icons/Close';
 import { Minutes } from '../Minutes';
 import { Documents } from '../Documents';
 import './container.css';
+import { userLogout } from "../../services/auth";
+import {useDispatch} from "react-redux";
+import { showSnackbar, userHasAuthenticated } from "../../redux/actions";
 
 const drawerWidth = 240;
 
@@ -65,32 +69,37 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const topNavButtons = [
-    { text: 'Minutes', icon: <ListAltIcon />, path: '/minutes' },
-    { text: 'Documents', icon: <MenuBookIcon />, path: '/documents' },
-    { text: 'Directory', icon: <ContactsIcon />, path: '/directory' }
-]
-
-const bottomNavButtons = [
-    { text: 'Signout', icon: <ExitToAppIcon /> }
-]
-
-function Home() {
+const Home = () => {
     return <h2>Home</h2>;
-}
-
-function About() {
-    return <h2>About</h2>;
 }
 
 export const Container = () => {
     const classes = useStyles();
     const theme = useTheme();
     const [mobileOpen, setMobileOpen] = React.useState(false);
+    const history = useHistory();
+    const dispatch = useDispatch();
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
+
+    const logout = () => {
+        userLogout().then(r => r);
+        dispatch(userHasAuthenticated(false));
+        history.push('/');
+        dispatch(showSnackbar('You have signed out successfully.', 'info'))
+    };
+
+    const topNavButtons = [
+        { text: 'Minutes', icon: <ListAltIcon />, path: '/minutes' },
+        { text: 'Documents', icon: <MenuBookIcon />, path: '/documents' },
+        { text: 'Directory', icon: <ContactsIcon />, path: '/directory' }
+    ];
+
+    const bottomNavButtons = [
+        { text: 'Signout', icon: <ExitToAppIcon />, click: logout }
+    ];
 
     const drawer = (
             <div>
@@ -107,7 +116,7 @@ export const Container = () => {
                 <Divider />
                 <List>
                     {bottomNavButtons.map((button, index) => (
-                        <ListItem button key={button.text}>
+                        <ListItem button key={button.text} onClick={button.click}>
                             <ListItemIcon>{button.icon}</ListItemIcon>
                             <ListItemText primary={button.text} />
                         </ListItem>
