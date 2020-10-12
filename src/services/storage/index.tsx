@@ -1,9 +1,7 @@
 import { Storage } from "aws-amplify";
 
 export const listFiles = async (path: string) => {
-    return Storage.list(path, { level: "public" })
-        .then(result => result)
-        .catch(err => err);
+    return Storage.list(path, { level: "public" }).catch(e => e);
 }
 
 export const deleteFile = async (file: string) => {
@@ -11,7 +9,6 @@ export const deleteFile = async (file: string) => {
 }
 
 export const addFiles = async (file: any, path: any) => {
-    console.log('file: ', file.name);
     return Storage.put(`${path}/${file.name}`, file).catch(e => e);
 }
 

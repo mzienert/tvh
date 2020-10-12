@@ -5,22 +5,16 @@ import Button from '@material-ui/core/Button';
 import Divider from "@material-ui/core/Divider";
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import { listFiles } from "../../services/storage";
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import DescriptionIcon from '@material-ui/icons/Description';
-import DeleteIcon from '@material-ui/icons/Delete';
-import IconButton from '@material-ui/core/IconButton';
 import { AlertDialog } from '../AlertDialog';
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch } from "react-redux";
 import { alertDialog } from "../../redux/actions";
 import { formDialog } from "../../redux/actions";
 import { FormDialog } from "../FormDialog";
 import { AlertDialogProps } from "../AlertDialog/AlertDialogProps.d";
 import { FormDialogProps } from "../FormDialog/FormDialogProps.d";
-import Skeleton from '@material-ui/lab/Skeleton';
+import { listDirectories } from "../../helpers";
+import { DisplaySkeleton } from "./Skeleton";
+import { DisplayTree, DisplayTreeProps } from "./FileTree";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -45,22 +39,30 @@ export const Documents = () => {
     const classes = useStyles();
 
     const [state, setState] = useState<any>({
-        files: [],
         deleteFile: null,
         loadingFiles: false,
+        sortedFiles: {},
     });
 
     const fileList = () => {
-        setState({
-            ...state,
-            loadingFiles: true
-        });
-        listFiles('documents')
-            .then(res => setState({
-                ...state,
-                files: res,
-                loadingFiles: false
-            }));
+        setState({...state, loadingFiles: true });
+        listFiles('')
+            .then(files => {
+                const directories = listDirectories(files);
+                const sortedFiles = {};
+                directories.forEach((directory: string) => {
+                    const directoryFiles: any = [];
+                    files.forEach((file: any) => {
+                        const filePath = file.key.split('/')[1];
+                        const fileDirectory = file.key.split('/')[0];
+                        if (fileDirectory === directory && filePath) {
+                            directoryFiles.push(file);
+                        }
+                    });
+                    Object.assign(sortedFiles, {[directory]: directoryFiles});
+                });
+                setState({...state, sortedFiles, loadingFiles: false})
+            });
     };
 
     const handleClickOpen = (file: string) => {
@@ -81,83 +83,36 @@ export const Documents = () => {
         file: state.deleteFile,
         fileList,
     }
+
+    const displayTreeProps : DisplayTreeProps = {
+        sortedFiles : state.sortedFiles,
+    }
     const formDialogProps: FormDialogProps = {
-        message: 'Add a document by uploading a file.  Date will be set upon upload.',
-        title: 'Upload Document File',
         fileList,
-        path: 'documents',
     }
 
     const uploadFile = () => {
         dispatch(formDialog());
     };
 
-    const displaySkeleton = () => (
-        <div>
-            <Skeleton />
-            <Skeleton />
-            <Skeleton />
-            <Skeleton />
-        </div>
-    );
-
     const downloadFile = (file: string) => {
         const awsUrl = 'https://tvh18afe5eae1ad44429cdbc502eb2fafa844416-master.s3-us-west-2.amazonaws.com/public/';
         window.location.href=`${awsUrl}${file}`;
     }
 
-    const displayList = () => {
-        if (state.files.length === 1 ) {
-            return (
-                <p>There are no files.</p>
-            )
-        };
-
-        return (
-            <List component="nav" aria-label="secondary mailbox folders">
-                {state.files.slice(1).map((file: any) => {
-                    const fileSize = file.size / 1024 / 1024;
-                    const fileName = file.key.split('/');
-                    const fileNameNoExtension = fileName[1].split('.');
-                    const date = file.lastModified.toLocaleDateString();
-                    return (
-                        <ListItem button
-                                  key={fileNameNoExtension[0]}
-                        >
-                            <ListItemIcon>
-                                <DescriptionIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary={fileNameNoExtension[0]}
-                                          secondary={`Date: ${date} | File Size: ${fileSize.toFixed(2)} MB`}
-                                          onClick={() => {downloadFile(file.key)}}
-                            />
-                            <ListItemSecondaryAction>
-                                <IconButton edge="end"
-                                            aria-label="delete"
-                                            onClick={() => handleClickOpen(file.key)}
-                                >
-                                    <DeleteIcon />
-                                </IconButton>
-                            </ListItemSecondaryAction>
-                        </ListItem>
-                    );
-                })}
-            </List>
-        );
-    };
-
     return (
         <Paper className={classes.paper}>
-            <Button variant="contained"
-                    color="primary"
-                    className={classes.button}
-                    startIcon={<CloudUploadIcon />}
-                    onClick={uploadFile}
+            <Button
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                startIcon={<CloudUploadIcon />}
+                onClick={uploadFile}
             >
                 Upload
             </Button>
             <Divider />
-            {!state.loadingFiles ? displayList() : displaySkeleton()}
+            {!state.loadingFiles ? <DisplayTree {...displayTreeProps} /> : <DisplaySkeleton />}
             <AlertDialog {...alertDialogProps} />
             <FormDialog {...formDialogProps} />
         </Paper>

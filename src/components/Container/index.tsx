@@ -27,11 +27,10 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Hidden from '@material-ui/core/Hidden';
 import CloseIcon from '@material-ui/icons/Close';
-import { Minutes } from '../Minutes';
 import { Documents } from '../Documents';
 import './container.css';
 import { userLogout } from "../../services/auth";
-import {useDispatch} from "react-redux";
+import { useDispatch } from "react-redux";
 import { showSnackbar, userHasAuthenticated } from "../../redux/actions";
 
 const drawerWidth = 240;
@@ -92,7 +91,6 @@ export const Container = () => {
     };
 
     const topNavButtons = [
-        { text: 'Minutes', icon: <ListAltIcon />, path: '/minutes' },
         { text: 'Documents', icon: <MenuBookIcon />, path: '/documents' },
         { text: 'Directory', icon: <ContactsIcon />, path: '/directory' }
     ];
@@ -159,7 +157,9 @@ export const Container = () => {
                             keepMounted: true, // Better open performance on mobile.
                         }}
                     >
-                        <IconButton onClick={handleDrawerToggle} className={classes.closeMenuButton}>
+                        <IconButton onClick={handleDrawerToggle}
+                                    className={classes.closeMenuButton}
+                        >
                             <CloseIcon/>
                         </IconButton>
                         {drawer}
@@ -181,9 +181,6 @@ export const Container = () => {
             <div className={classes.content}>
                 <div className={classes.toolbar} />
                 <Switch>
-                    <Route path="/minutes">
-                        <Minutes />
-                    </Route>
                     <Route path="/documents">
                         <Documents />
                     </Route>

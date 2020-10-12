@@ -45,7 +45,7 @@ export default function(state = initialState, action: any) {
         case FORM_DIALOG:
             return {
                 ...state,
-                formDialogOpen: !state.formDialogOpen
+                formDialogOpen: !state.formDialogOpen,
             }
         default:
             return state;

@@ -35,5 +35,5 @@ export const alertDialog = () => ({
 })
 
 export const formDialog = () => ({
-    type: FORM_DIALOG
+    type: FORM_DIALOG,
 })
