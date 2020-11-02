@@ -32,6 +32,7 @@ import './container.css';
 import { userLogout } from "../../services/auth";
 import { useDispatch } from "react-redux";
 import { showSnackbar, userHasAuthenticated } from "../../redux/actions";
+import { Directory } from '../Directory';
 
 const drawerWidth = 240;
 
@@ -92,7 +93,7 @@ export const Container = () => {
 
     const topNavButtons = [
         { text: 'Documents', icon: <MenuBookIcon />, path: '/documents' },
-        { text: 'Directory', icon: <ContactsIcon />, path: '/directory' }
+       /* { text: 'Directory', icon: <ContactsIcon />, path: '/directory' }*/
     ];
 
     const bottomNavButtons = [
@@ -185,7 +186,7 @@ export const Container = () => {
                         <Documents />
                     </Route>
                     <Route path="/directory">
-                        <Home />
+                        <Directory />
                     </Route>
                 </Switch>
             </div>
