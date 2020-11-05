@@ -1,22 +1,17 @@
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardMedia from "@material-ui/core/CardMedia";
-import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
-import CardActions from "@material-ui/core/CardActions";
-import Button from "@material-ui/core/Button";
-import Card from "@material-ui/core/Card";
 import React, { useEffect, useState } from "react";
-import {createStyles, makeStyles, Theme} from "@material-ui/core/styles";
+import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import List from "@material-ui/core/List";
-import ListItem, {ListItemProps} from "@material-ui/core/ListItem";
+import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
-import InboxIcon from "@material-ui/icons/Inbox";
 import ListItemText from "@material-ui/core/ListItemText";
-import DraftsIcon from "@material-ui/icons/Drafts";
 import Divider from "@material-ui/core/Divider";
 import Paper from "@material-ui/core/Paper";
 import { getUserList } from "../../services/auth";
+import { Grid } from "@material-ui/core";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { UserListProps } from "./UserProps";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -28,32 +23,61 @@ const useStyles = makeStyles((theme: Theme) =>
             textAlign: 'left',
             color: theme.palette.text.secondary,
         },
+        loading: {
+            display: 'flex',
+            padding: theme.spacing(2),
+            justifyContent: 'center',
+        }
     }),
 );
 
-
-export const UserList = () => {
+export const UserList = (props: UserListProps) => {
     const classes = useStyles();
-    const [userList, setUserList] = useState([])
-
-    const ListItemLink = (props: ListItemProps<'a', { button?: true }>) => <ListItem button component="a" {...props} />;
+    const [userList, setUserList] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        getUserList().then(res => setUserList(res.Users));
+        getUserList().then(res => usersLoaded(res.Users));
     }, [])
 
-    console.log(userList)
+    const usersLoaded = (userData: any) => {
+        setLoading(false)
+        setUserList(userData)
+    };
+
+    const userListItems = () => (userList.map((user: any) => (
+        <ListItem
+            key={user.Username}
+            button
+            onClick={() => props.setSelectedUser(user.Username)}>
+            <ListItemIcon>
+                <AccountCircleIcon />
+            </ListItemIcon>
+            <ListItemText primary={user.Username} />
+        </ListItem>
+    )));
+
+    const loadingContainer = () => (
+        <div className={classes.loading}>
+            <CircularProgress />
+        </div>
+    );
+
     return (
         <Paper className={classes.paper}>
-            <List component="nav" aria-label="main mailbox folders">
-                {userList.map((user: any) => (
-                        <ListItem key={user.Username} button>
-                            <ListItemIcon>
-                                <AccountCircleIcon />
-                            </ListItemIcon>
-                            <ListItemText primary={user.Username} />
-                        </ListItem>
-                ))}
+            <Grid
+                container
+                direction="row"
+                alignItems="center">
+                <Grid item>
+                    <Typography variant="h5">Members</Typography>
+                </Grid>
+            </Grid>
+            <List
+                component="nav"
+                aria-label="main mailbox folders">
+                <Divider></Divider>
+                { loading ? loadingContainer() : userListItems()}
             </List>
         </Paper>
     )

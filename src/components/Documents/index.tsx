@@ -84,8 +84,8 @@ export const Documents = () => {
         fileList,
     }
 
-    const displayTreeProps : DisplayTreeProps = {
-        sortedFiles : state.sortedFiles,
+    const displayTreeProps: DisplayTreeProps = {
+        sortedFiles: state.sortedFiles,
     }
     const formDialogProps: FormDialogProps = {
         fileList,
