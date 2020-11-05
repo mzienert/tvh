@@ -1,21 +1,76 @@
 {
-	"auth": {
-		"tvhbd9bac74bd9bac74": {
-			"service": "Cognito",
-			"providerPlugin": "awscloudformation",
-			"dependsOn": []
-		}
-	},
-	"hosting": {
-		"amplifyhosting": {
-			"service": "amplifyhosting",
-			"type": "cicd"
-		}
-	},
-	"storage": {
-		"s3b4ce3994": {
-			"service": "S3",
-			"providerPlugin": "awscloudformation"
-		}
-	}
+    "auth": {
+        "tvhbd9bac74bd9bac74": {
+            "service": "Cognito",
+            "providerPlugin": "awscloudformation",
+            "dependsOn": []
+        },
+        "userPoolGroups": {
+            "service": "Cognito-UserPool-Groups",
+            "providerPlugin": "awscloudformation",
+            "dependsOn": [
+                {
+                    "category": "auth",
+                    "resourceName": "tvhbd9bac74bd9bac74",
+                    "attributes": [
+                        "UserPoolId",
+                        "AppClientIDWeb",
+                        "AppClientID",
+                        "IdentityPoolId"
+                    ]
+                }
+            ]
+        }
+    },
+    "hosting": {
+        "amplifyhosting": {
+            "service": "amplifyhosting",
+            "type": "cicd"
+        }
+    },
+    "storage": {
+        "s3b4ce3994": {
+            "service": "S3",
+            "providerPlugin": "awscloudformation"
+        }
+    },
+    "function": {
+        "AdminQueries9ca3e084": {
+            "service": "Lambda",
+            "providerPlugin": "awscloudformation",
+            "build": true,
+            "dependsOn": [
+                {
+                    "category": "auth",
+                    "resourceName": "tvhbd9bac74bd9bac74",
+                    "attributes": [
+                        "UserPoolId"
+                    ]
+                }
+            ]
+        }
+    },
+    "api": {
+        "AdminQueries": {
+            "service": "API Gateway",
+            "providerPlugin": "awscloudformation",
+            "dependsOn": [
+                {
+                    "category": "auth",
+                    "resourceName": "tvhbd9bac74bd9bac74",
+                    "attributes": [
+                        "UserPoolId"
+                    ]
+                },
+                {
+                    "category": "function",
+                    "resourceName": "AdminQueries9ca3e084",
+                    "attributes": [
+                        "Arn",
+                        "Name"
+                    ]
+                }
+            ]
+        }
+    }
 }

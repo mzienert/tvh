@@ -1,4 +1,4 @@
-import { Auth } from "aws-amplify";
+import { Auth, API } from "aws-amplify";
 
 export const userLogin = async (email: string, password: string) => {
     try {
@@ -30,3 +30,21 @@ export const getCurrentAuthUser = async () => {
 export const userLogout = async () => {
     return await Auth.signOut().catch(e => e);
 }
+
+export const getUserList = async () => {
+    try {
+        const apiName = 'AdminQueries';
+        const path = '/listUsers';
+        const myInit = {
+            headers: {
+                'Content-Type' : 'application/json',
+                Authorization: `${(await Auth.currentSession()).getAccessToken().getJwtToken()}`
+            }
+        }
+        return await API.get(apiName, path, myInit);
+    } catch (e) {
+        return e
+    }
+}
+
+
