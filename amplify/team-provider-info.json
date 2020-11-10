@@ -18,13 +18,8 @@
                     "type": "cicd"
                 }
             },
-            "function": {
-                "tvh63ab9e9b63ab9e9bPostConfirmation": {
-                    "GROUP": "users"
-                }
-            },
             "auth": {
-                "tvh63ab9e9b63ab9e9b": {}
+                "tvh65a708c6": {}
             }
         }
     }

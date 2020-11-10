@@ -47,4 +47,22 @@ export const getUserList = async () => {
     }
 }
 
+export const updateCurrentUserAttributes = async (userAttributes: any) => {
+    try {
+        const thing = await getCurrentAuthUser();
+        return await Auth.updateUserAttributes(thing, userAttributes);
+    } catch (e) {
+        return e
+    }
+}
+
+export const getCurrentUserAttributes = async () => {
+    try {
+        const thing = await getCurrentAuthUser();
+        return await Auth.userAttributes(thing);
+    } catch (e) {
+        return e
+    }
+}
+
 

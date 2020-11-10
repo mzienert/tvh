@@ -1,31 +1,23 @@
 {
     "auth": {
+        "tvh65a708c6": {
+            "service": "Cognito",
+            "providerPlugin": "awscloudformation",
+            "dependsOn": [],
+            "customAuth": false
+        },
         "userPoolGroups": {
             "service": "Cognito-UserPool-Groups",
             "providerPlugin": "awscloudformation",
             "dependsOn": [
                 {
                     "category": "auth",
-                    "resourceName": "tvh63ab9e9b63ab9e9b",
+                    "resourceName": "tvh65a708c6",
                     "attributes": [
                         "UserPoolId",
                         "AppClientIDWeb",
-                        "AppClientID"
-                    ]
-                }
-            ]
-        },
-        "tvh63ab9e9b63ab9e9b": {
-            "service": "Cognito",
-            "providerPlugin": "awscloudformation",
-            "dependsOn": [
-                {
-                    "category": "function",
-                    "resourceName": "tvh63ab9e9b63ab9e9bPostConfirmation",
-                    "triggerProvider": "Cognito",
-                    "attributes": [
-                        "Arn",
-                        "Name"
+                        "AppClientID",
+                        "IdentityPoolId"
                     ]
                 }
             ]
@@ -44,19 +36,14 @@
         }
     },
     "function": {
-        "tvh63ab9e9b63ab9e9bPostConfirmation": {
-            "build": true,
-            "providerPlugin": "awscloudformation",
-            "service": "Lambda"
-        },
-        "AdminQueriesd438af6a": {
+        "AdminQueries165817c8": {
             "service": "Lambda",
             "providerPlugin": "awscloudformation",
             "build": true,
             "dependsOn": [
                 {
                     "category": "auth",
-                    "resourceName": "tvh63ab9e9b63ab9e9b",
+                    "resourceName": "tvh65a708c6",
                     "attributes": [
                         "UserPoolId"
                     ]
@@ -71,14 +58,14 @@
             "dependsOn": [
                 {
                     "category": "auth",
-                    "resourceName": "tvh63ab9e9b63ab9e9b",
+                    "resourceName": "tvh65a708c6",
                     "attributes": [
                         "UserPoolId"
                     ]
                 },
                 {
                     "category": "function",
-                    "resourceName": "AdminQueriesd438af6a",
+                    "resourceName": "AdminQueries165817c8",
                     "attributes": [
                         "Arn",
                         "Name"
