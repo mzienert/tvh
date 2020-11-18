@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import Grid from '@material-ui/core/Grid';
 import { UserCard } from './UserCard';
 import { UserList } from "./UserList";
-import {UserFormProps, UserListProps} from "./UserProps";
+import { UserFormProps, UserListProps } from "./UserProps";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({

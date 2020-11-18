@@ -12,6 +12,7 @@ import { getUserList } from "../../services/auth";
 import { Grid } from "@material-ui/core";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { UserListProps } from "./UserProps";
+import { userFullName } from "../../helpers";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -53,7 +54,7 @@ export const UserList = (props: UserListProps) => {
             <ListItemIcon>
                 <AccountCircleIcon />
             </ListItemIcon>
-            <ListItemText primary={user.Username} />
+            <ListItemText primary={userFullName(user.Attributes)} />
         </ListItem>
     )));
 

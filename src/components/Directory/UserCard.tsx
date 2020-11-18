@@ -4,11 +4,10 @@ import Typography from "@material-ui/core/Typography";
 import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { UserFormProps } from "./UserProps";
-import EditIcon from '@material-ui/icons/Edit';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import InputLabel from "@material-ui/core/InputLabel";
 import FilledInput from "@material-ui/core/FilledInput";
@@ -17,7 +16,8 @@ import { Grid } from "@material-ui/core";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import { showSnackbar } from "../../redux/actions";
-import { getCurrentUserAttributes, updateCurrentUserAttributes } from "../../services/auth";
+import {getCurrentUserAttributes, getUserList, updateCurrentUserAttributes} from "../../services/auth";
+import { buildAddressString, getUserAttributeValue } from "../../helpers";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) =>
     })
 );
 
-type UserForm = {
+export type UserForm = {
     firstName: string,
     lastName: string,
     email: string,
@@ -52,8 +52,6 @@ type UserForm = {
 export const UserCard = (props: UserFormProps) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const userImage = '';
-    const { register, handleSubmit, errors } = useForm<UserForm>();
     const [state, setState] = useState({
         firstName: '',
         lastName: '',
@@ -64,6 +62,8 @@ export const UserCard = (props: UserFormProps) => {
         state: '',
         zip: '',
     });
+    const [editUser, setEditUser] = useState(false);
+    const { register, handleSubmit, errors, setValue } = useForm<UserForm>({defaultValues: state});
 
     const handleChange = (event: any) => {
         setState({...state, [event.target.id]: event.target.value});
@@ -76,10 +76,65 @@ export const UserCard = (props: UserFormProps) => {
         }
     }
 
-    const editUser = () => {
-
-        console.log('Mattt')
+    const hydrateUserForm = (user: any) => {
+        const currentUserId = user.find((attr: any) => attr.Name === 'sub');
+        const selectedUserEqCurrentUser = currentUserId.Value === props.selectedUser ? true : false;
+        const name = getUserAttributeValue('name', user);
+        const familyName = getUserAttributeValue('family_name', user);
+        const email = getUserAttributeValue('email', user);
+        const phone = getUserAttributeValue('phone_number', user);
+        const address = getUserAttributeValue('address', user);
+        const addressArray = address.Value.split(',')
+        if (selectedUserEqCurrentUser) {
+            setValue('firstName',  name.Value);
+            setValue('lastName', familyName.Value);
+            setValue('email', email.Value);
+            setValue('phone', phone.Value);
+            setValue('address', addressArray[0]);
+            setValue('city', addressArray[1]);
+            setValue('state', addressArray[2]);
+            setValue('zip', addressArray[3]);
+        }
     }
+
+    const hydrateUserCard = (selectedUser: any) => {
+        // TODO: DONT CALL THIS EVERYTIME A USER IS SELECTED
+        getUserList().then(list => {
+            const userList = list.Users;
+            const userObj = userList.find((user: any) => user.Username === selectedUser);
+            const userAttributes = userObj.Attributes;
+            const firstName = getUserAttributeValue('name', userAttributes).Value;
+            const lastName = getUserAttributeValue('family_name', userAttributes).Value;
+            const email = getUserAttributeValue('email', userAttributes).Value;
+            const phone = getUserAttributeValue('phone_number', userAttributes).Value;
+            const address = getUserAttributeValue('address', userAttributes);
+            const addressArray = address.Value.split(',');
+            setState({
+                firstName,
+                lastName,
+                email,
+                phone,
+                address: addressArray[0],
+                city: addressArray[1],
+                state: addressArray[2],
+                zip: addressArray[3],
+            })
+        })
+    }
+
+    useEffect(() => {
+        const currentUserAttributes = async () => await getCurrentUserAttributes();
+        currentUserAttributes().then(user => {
+            const userId = getUserAttributeValue('sub', user);
+            if (userId.Value === props.selectedUser) {
+                setEditUser(true)
+                hydrateUserForm(user)
+            } else {
+                setEditUser(false)
+                hydrateUserCard(props.selectedUser)
+            }
+        });
+    }, [props.selectedUser])
 
     const onSubmit = async (userForm: UserForm) => {
         const formattedAddress = buildAddressString(userForm);
@@ -90,32 +145,26 @@ export const UserCard = (props: UserFormProps) => {
             phone_number: userForm.phone.trim(),
             address: formattedAddress,
         }
-        updateCurrentUserAttributes(userAttributes).then(res => getCurrentUserAttributes().then(
-            res => console.log('res: ', res)
-        ))
+        updateCurrentUserAttributes(userAttributes).then(res => {
+            if (res.code) {
+                dispatch(showSnackbar(res.message, 'error'));
+            }
+            dispatch(showSnackbar('Contact information updated.', 'info'));
+        })
 
     }
 
-    const buildAddressString = (userForm: UserForm) => {
-        const {firstName, lastName, email, phone, ...addressValues} = userForm;
-        return  Object.values(addressValues).join(',');
-    }
     return (
         <Card className={classes.root}>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                {userImage
-                    ? <CardMedia
-                        className={classes.media}
-                        image="https://picsum.photos/id/237/500/240"
-                        title="Contemplative Reptile" />
-                    : <CardMedia className={classes.iconContainer}>
-                        <AccountCircleIcon  className={classes.accountCircleIcon}/>
-                    </CardMedia>}
+            <CardMedia className={classes.iconContainer}>
+                <AccountCircleIcon  className={classes.accountCircleIcon}/>
+            </CardMedia>
+            {editUser
+            ? <form onSubmit={handleSubmit(onSubmit)}>
                     <CardContent>
                         <Typography
                             gutterBottom
                             variant="h5">
-                            {props.selectedUser}
                         </Typography>
                         <Grid
                             container
@@ -128,7 +177,7 @@ export const UserCard = (props: UserFormProps) => {
                                 <FormControl
                                     variant="filled"
                                     fullWidth>
-                                    <InputLabel htmlFor="firstName">First Name</InputLabel>
+                                    <InputLabel htmlFor="firstName" shrink>First Name</InputLabel>
                                     <FilledInput
                                         name="firstName"
                                         id="firstName"
@@ -157,7 +206,7 @@ export const UserCard = (props: UserFormProps) => {
                                 <FormControl
                                     variant="filled"
                                     fullWidth>
-                                    <InputLabel htmlFor="lastName">Last Name</InputLabel>
+                                    <InputLabel htmlFor="lastName" shrink>Last Name</InputLabel>
                                     <FilledInput
                                         name="lastName"
                                         id="lastName"
@@ -176,6 +225,7 @@ export const UserCard = (props: UserFormProps) => {
                                             })
                                         }
                                         onChange={handleChange}
+                                        defaultValue={''}
                                         error={ errors.lastName ? true : false }/>
                                 </FormControl>
                             </Grid>
@@ -185,7 +235,7 @@ export const UserCard = (props: UserFormProps) => {
                                 <FormControl
                                     variant="filled"
                                     fullWidth>
-                                    <InputLabel htmlFor="email">Email</InputLabel>
+                                    <InputLabel htmlFor="email" shrink>Email</InputLabel>
                                     <FilledInput
                                         name="email"
                                         id="email"
@@ -213,7 +263,7 @@ export const UserCard = (props: UserFormProps) => {
                                 <FormControl
                                     variant="filled"
                                     fullWidth>
-                                    <InputLabel htmlFor="phone">Phone</InputLabel>
+                                    <InputLabel htmlFor="phone" shrink>Phone</InputLabel>
                                     <FilledInput
                                         name="phone"
                                         id="phone"
@@ -241,7 +291,7 @@ export const UserCard = (props: UserFormProps) => {
                                 <FormControl
                                     variant="filled"
                                     fullWidth>
-                                    <InputLabel htmlFor="address">Address</InputLabel>
+                                    <InputLabel htmlFor="address" shrink>Address</InputLabel>
                                     <FilledInput
                                         name="address"
                                         id="address"
@@ -269,7 +319,7 @@ export const UserCard = (props: UserFormProps) => {
                                 <FormControl
                                     variant="filled"
                                     fullWidth>
-                                    <InputLabel htmlFor="city">City</InputLabel>
+                                    <InputLabel htmlFor="city" shrink>City</InputLabel>
                                     <FilledInput
                                         name="city"
                                         id="city"
@@ -297,7 +347,7 @@ export const UserCard = (props: UserFormProps) => {
                                 <FormControl
                                     variant="filled"
                                     fullWidth>
-                                    <InputLabel htmlFor="state">State</InputLabel>
+                                    <InputLabel htmlFor="state" shrink>State</InputLabel>
                                     <FilledInput
                                         name="state"
                                         id="state"
@@ -325,7 +375,7 @@ export const UserCard = (props: UserFormProps) => {
                                 <FormControl
                                     variant="filled"
                                     fullWidth>
-                                    <InputLabel htmlFor="zip">Zip</InputLabel>
+                                    <InputLabel htmlFor="zip" shrink>Zip</InputLabel>
                                     <FilledInput
                                         name="zip"
                                         id="zip"
@@ -352,14 +402,6 @@ export const UserCard = (props: UserFormProps) => {
                 <CardActions>
                     <Button
                         size="small"
-                        color="default"
-                        variant="contained"
-                        startIcon={<EditIcon />}
-                        onClick={editUser}>
-                        Edit
-                    </Button>
-                    <Button
-                        size="small"
                         color="primary"
                         variant="contained"
                         startIcon={<CloudUploadIcon />}
@@ -369,6 +411,63 @@ export const UserCard = (props: UserFormProps) => {
                     </Button>
                 </CardActions>
             </form>
+            : <CardContent>
+                    <Grid
+                        container
+                        direction="row"
+                        alignItems="center"
+                        spacing={2}>
+                        <Grid
+                            item
+                            xs={6}>
+                            First Name:<br />
+                            {state.firstName}
+                        </Grid>
+                        <Grid
+                            item
+                            xs={6}>
+                            Last Name:<br />
+                            {state.lastName}
+                        </Grid>
+                        <Grid
+                            item
+                            xs={6}>
+                            Email:<br />
+                            {state.email}
+                        </Grid>
+                        <Grid
+                            item
+                            xs={6}>
+                            Phone:<br />
+                            {state.phone}
+                        </Grid>
+                        <Grid
+                            item
+                            xs={12}>
+                            Address:<br />
+                            {state.address}
+                        </Grid>
+                        <Grid
+                            item
+                            xs={5}>
+                            City:<br />
+                            {state.city}
+                        </Grid>
+                        <Grid
+                            item
+                            xs={3}>
+                            State:<br />
+                            {state.state}
+                        </Grid>
+                        <Grid
+                            item
+                            xs={4}>
+                            Zip:<br />
+                            {state.zip}
+                        </Grid>
+
+                    </Grid>
+              </CardContent> }
         </Card>
     )
 }
