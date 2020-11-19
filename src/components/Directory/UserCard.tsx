@@ -1,3 +1,4 @@
+import CardActionArea from "@material-ui/core/CardActionArea";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
@@ -105,22 +106,36 @@ export const UserCard = (props: UserFormProps) => {
             const userList = list.Users;
             const userObj = userList.find((user: any) => user.Username === selectedUser);
             const userAttributes = userObj.Attributes;
-            const firstName = getUserAttributeValue('name', userAttributes).Value;
-            const lastName = getUserAttributeValue('family_name', userAttributes).Value;
-            const email = getUserAttributeValue('email', userAttributes).Value;
-            const phone = getUserAttributeValue('phone_number', userAttributes).Value;
-            const address = getUserAttributeValue('address', userAttributes);
-            const addressArray = address.Value.split(',');
-            setState({
-                firstName,
-                lastName,
-                email,
-                phone,
-                address: addressArray[0],
-                city: addressArray[1],
-                state: addressArray[2],
-                zip: addressArray[3],
-            })
+            if(userAttributes.length > 3) {
+                const firstName = getUserAttributeValue('name', userAttributes).Value;
+                const lastName = getUserAttributeValue('family_name', userAttributes).Value;
+                const email = getUserAttributeValue('email', userAttributes).Value;
+                const phone = getUserAttributeValue('phone_number', userAttributes).Value;
+                const address = getUserAttributeValue('address', userAttributes);
+                const addressArray = address.Value.split(',');
+                setState({
+                    firstName,
+                    lastName,
+                    email,
+                    phone,
+                    address: addressArray[0],
+                    city: addressArray[1],
+                    state: addressArray[2],
+                    zip: addressArray[3],
+                })
+            } else {
+                const email = getUserAttributeValue('email', userAttributes).Value;
+                setState({
+                    firstName: '',
+                    lastName: '',
+                    email,
+                    phone: '',
+                    address: '',
+                    city: '',
+                    state: '',
+                    zip: '',
+                })
+            }
         })
     }
 
