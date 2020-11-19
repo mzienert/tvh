@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "tvhbd9bac74bd9bac74_identitypool_e33824a4",
-    "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "tvhbd9bd9bac74",
-    "userPoolName": "tvhbd9bac74_userpool_bd9bac74",
+    "identityPoolName": "tvh65a708c6_identitypool_65a708c6",
+    "allowUnauthenticatedIdentities": true,
+    "resourceNameTruncated": "tvh65a708c6",
+    "userPoolName": "tvh65a708c6_userpool_65a708c6",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -28,19 +28,11 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "tvhbd9bd9bac74_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "tvh65a65a708c6_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "useDefault": "manual",
+    "sharedId": "65a708c6",
+    "resourceName": "tvh65a708c6",
     "authSelections": "identityPoolAndUserPool",
-    "resourceName": "tvhbd9bac74bd9bac74",
-    "usernameAttributes": [
-        "email"
-    ],
-    "userPoolGroups": false,
-    "adminQueries": false,
-    "triggers": "{}",
-    "hostedUI": false,
-    "userPoolGroupList": [],
     "authRoleArn": {
         "Fn::GetAtt": [
             "AuthRole",
@@ -53,9 +45,10 @@
             "Arn"
         ]
     },
-    "parentStack": {
-        "Ref": "AWS::StackId"
-    },
-    "permissions": [],
+    "useDefault": "default",
+    "usernameAttributes": [
+        "email"
+    ],
+    "userPoolGroupList": [],
     "dependsOn": []
 }

@@ -93,7 +93,7 @@ export const Container = () => {
 
     const topNavButtons = [
         { text: 'Documents', icon: <MenuBookIcon />, path: '/documents' },
-       /* { text: 'Directory', icon: <ContactsIcon />, path: '/directory' }*/
+        { text: 'Directory', icon: <ContactsIcon />, path: '/directory' }
     ];
 
     const bottomNavButtons = [

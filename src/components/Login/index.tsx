@@ -5,7 +5,8 @@ import { connect } from "react-redux";
 import './login.css';
 import {
     setLoading as _setLoading,
-    showSnackbar as _showSnackbar, userHasAuthenticated
+    showSnackbar as _showSnackbar,
+    userHasAuthenticated
 } from "../../redux/actions";
 
 

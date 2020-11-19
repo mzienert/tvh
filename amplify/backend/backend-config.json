@@ -1,9 +1,26 @@
 {
 	"auth": {
-		"tvhbd9bac74bd9bac74": {
+		"tvh65a708c6": {
 			"service": "Cognito",
 			"providerPlugin": "awscloudformation",
-			"dependsOn": []
+			"dependsOn": [],
+			"customAuth": false
+		},
+		"userPoolGroups": {
+			"service": "Cognito-UserPool-Groups",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [
+				{
+					"category": "auth",
+					"resourceName": "tvh65a708c6",
+					"attributes": [
+						"UserPoolId",
+						"AppClientIDWeb",
+						"AppClientID",
+						"IdentityPoolId"
+					]
+				}
+			]
 		}
 	},
 	"hosting": {
@@ -13,9 +30,48 @@
 		}
 	},
 	"storage": {
-		"s3b4ce3994": {
+		"s3145fe5ca": {
 			"service": "S3",
 			"providerPlugin": "awscloudformation"
+		}
+	},
+	"function": {
+		"AdminQueries165817c8": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true,
+			"dependsOn": [
+				{
+					"category": "auth",
+					"resourceName": "tvh65a708c6",
+					"attributes": [
+						"UserPoolId"
+					]
+				}
+			]
+		}
+	},
+	"api": {
+		"AdminQueries": {
+			"service": "API Gateway",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [
+				{
+					"category": "auth",
+					"resourceName": "tvh65a708c6",
+					"attributes": [
+						"UserPoolId"
+					]
+				},
+				{
+					"category": "function",
+					"resourceName": "AdminQueries165817c8",
+					"attributes": [
+						"Arn",
+						"Name"
+					]
+				}
+			]
 		}
 	}
 }
