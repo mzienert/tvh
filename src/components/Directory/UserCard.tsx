@@ -79,26 +79,28 @@ export const UserCard = (props: UserFormProps) => {
     const hydrateUserForm = (user: any) => {
         const currentUserId = user.find((attr: any) => attr.Name === 'sub');
         const selectedUserEqCurrentUser = currentUserId.Value === props.selectedUser ? true : false;
-        const name = getUserAttributeValue('name', user);
-        const familyName = getUserAttributeValue('family_name', user);
         const email = getUserAttributeValue('email', user);
-        const phone = getUserAttributeValue('phone_number', user);
-        const address = getUserAttributeValue('address', user);
-        const addressArray = address.Value.split(',')
-        if (selectedUserEqCurrentUser) {
-            setValue('firstName',  name.Value);
-            setValue('lastName', familyName.Value);
-            setValue('email', email.Value);
-            setValue('phone', phone.Value);
-            setValue('address', addressArray[0]);
-            setValue('city', addressArray[1]);
-            setValue('state', addressArray[2]);
-            setValue('zip', addressArray[3]);
+        setValue('email', email.Value);
+        if(user.length > 3) {
+            const name = getUserAttributeValue('name', user);
+            const familyName = getUserAttributeValue('family_name', user);
+            const phone = getUserAttributeValue('phone_number', user);
+            const address = getUserAttributeValue('address', user);
+            const addressArray = address.Value.split(',')
+            if (selectedUserEqCurrentUser) {
+                setValue('firstName', name.Value);
+                setValue('lastName', familyName.Value);
+                setValue('phone', phone.Value);
+                setValue('address', addressArray[0]);
+                setValue('city', addressArray[1]);
+                setValue('state', addressArray[2]);
+                setValue('zip', addressArray[3]);
+            }
         }
     }
 
     const hydrateUserCard = (selectedUser: any) => {
-        // TODO: DONT CALL THIS EVERYTIME A USER IS SELECTED
+        // TODO: DONT CALL THIS EVERY TIME A USER IS SELECTED
         getUserList().then(list => {
             const userList = list.Users;
             const userObj = userList.find((user: any) => user.Username === selectedUser);
@@ -142,7 +144,7 @@ export const UserCard = (props: UserFormProps) => {
             name: userForm.firstName.trim(),
             family_name: userForm.lastName.trim(),
             email: userForm.email.trim(),
-            phone_number: userForm.phone.trim(),
+            phone_number: `+1${userForm.phone.trim().replace(/\D/g,'')}`,
             address: formattedAddress,
         }
         updateCurrentUserAttributes(userAttributes).then(res => {
@@ -419,53 +421,36 @@ export const UserCard = (props: UserFormProps) => {
                         spacing={2}>
                         <Grid
                             item
-                            xs={6}>
-                            First Name:<br />
-                            {state.firstName}
-                        </Grid>
-                        <Grid
-                            item
-                            xs={6}>
-                            Last Name:<br />
-                            {state.lastName}
+                            xs={12}>
+                            Name:<br />
+                            <Typography variant="h6" gutterBottom>
+                            {`${state.firstName} ${state.lastName}`}
+                            </Typography>
                         </Grid>
                         <Grid
                             item
                             xs={6}>
                             Email:<br />
+                            <Typography variant="h6" gutterBottom>
                             {state.email}
+                            </Typography>
                         </Grid>
                         <Grid
                             item
                             xs={6}>
                             Phone:<br />
+                            <Typography variant="h6" gutterBottom>
                             {state.phone}
+                            </Typography>
                         </Grid>
                         <Grid
                             item
                             xs={12}>
                             Address:<br />
-                            {state.address}
+                            <Typography variant="h6" gutterBottom>
+                            {`${state.address} ${state.city} ${state.state} ${state.zip}`}
+                            </Typography>
                         </Grid>
-                        <Grid
-                            item
-                            xs={5}>
-                            City:<br />
-                            {state.city}
-                        </Grid>
-                        <Grid
-                            item
-                            xs={3}>
-                            State:<br />
-                            {state.state}
-                        </Grid>
-                        <Grid
-                            item
-                            xs={4}>
-                            Zip:<br />
-                            {state.zip}
-                        </Grid>
-
                     </Grid>
               </CardContent> }
         </Card>
