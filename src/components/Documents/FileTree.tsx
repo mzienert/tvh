@@ -38,6 +38,7 @@ const useTreeItemStyles = makeStyles((theme: Theme) =>
             '&:focus > $content $label, &:hover > $content $label, &$selected > $content $label': {
                 backgroundColor: 'transparent',
             },
+
         },
         content: {
             color: theme.palette.text.secondary,
@@ -115,6 +116,9 @@ const useStyles = makeStyles(
         root: {
             flexGrow: 1,
         },
+        noFileText: {
+            textAlign: 'center',
+        },
     }),
 );
 
@@ -134,34 +138,41 @@ export const DisplayTree = (props: DisplayTreeProps) => {
     useEffect(() => {
         const directories = Object.keys(props.sortedFiles);
         setState({...state, directories})
+
     }, [props]);
 
-    return (
-        <TreeView
-            className={classes.root}
-            defaultCollapseIcon={<ArrowDropDownIcon />}
-            defaultExpandIcon={<ArrowRightIcon />}
-            defaultEndIcon={<div style={{ width: 24 }} />}
-        >
-           {state.directories.map((directory: any) => (
-                <StyledTreeItem
-                    nodeId={directory}
-                    labelText={directory}
-                    labelIcon={FolderIcon}
-                    key={directory}>
-                    {props.sortedFiles[directory].map((file: any) => (
+    if (state.directories.length) {
+        return (
+            <TreeView
+                className={classes.root}
+                defaultCollapseIcon={<ArrowDropDownIcon/>}
+                defaultExpandIcon={<ArrowRightIcon/>}
+                defaultEndIcon={<div style={{width: 24}}/>}
+            >
+                {state.directories.map((directory: any) => (
                     <StyledTreeItem
-                        nodeId={file.key.split('/')[1]}
-                        labelText={file.key.split('/')[1]}
-                        labelIcon={DescriptionIcon}
-                        labelInfo={formatDate(file.lastModified)}
-                        color="#1a73e8"
-                        bgColor="#e8f0fe"
-                    />
-                    ))}
-                </StyledTreeItem>
-           ))}
-        </TreeView>
-    );
+                        nodeId={directory}
+                        labelText={directory}
+                        labelIcon={FolderIcon}
+                        key={directory}>
+                        {props.sortedFiles[directory].map((file: any) => (
+                            <StyledTreeItem
+                                nodeId={file.key.split('/')[1]}
+                                labelText={file.key.split('/')[1]}
+                                labelIcon={DescriptionIcon}
+                                labelInfo={formatDate(file.lastModified)}
+                                color="#1a73e8"
+                                bgColor="#e8f0fe"
+                            />
+                        ))}
+                    </StyledTreeItem>
+                ))}
+            </TreeView>
+        );
+    } else {
+        return (
+            <p className={classes.noFileText}>No files have been added yet.</p>
+        )
+    }
 }
 
