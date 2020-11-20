@@ -65,4 +65,18 @@ export const getCurrentUserAttributes = async () => {
     }
 }
 
-
+export const listUserGroups = async (user: string) => {
+    try {
+        const apiName = 'AdminQueries';
+        const path = `/listGroupsForUser?username=${user}`;
+        const myInit = {
+            headers: {
+                'Content-Type' : 'application/json',
+                Authorization: `${(await Auth.currentSession()).getAccessToken().getJwtToken()}`
+            }
+        }
+        return await API.get(apiName, path, myInit);
+    } catch (e) {
+        return e
+    }
+}

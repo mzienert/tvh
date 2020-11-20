@@ -15,6 +15,7 @@ import { FormDialogProps } from "../FormDialog/FormDialogProps.d";
 import { listDirectories } from "../../helpers";
 import { DisplaySkeleton } from "./Skeleton";
 import { DisplayTree, DisplayTreeProps } from "./FileTree";
+import { getCurrentAuthUser, listUserGroups } from "../../services/auth";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -43,6 +44,8 @@ export const Documents = () => {
         loadingFiles: false,
         sortedFiles: {},
     });
+
+    const [userGroups, setUserGroups] = useState([])
 
     const fileList = () => {
         setState({...state, loadingFiles: true });
@@ -75,6 +78,11 @@ export const Documents = () => {
 
     useEffect(() => {
         fileList();
+        getCurrentAuthUser().then(user =>  {
+            listUserGroups(user.username).then(groups => {
+                setUserGroups(groups.Groups);
+            });
+        });
     }, []);
 
     const alertDialogProps: AlertDialogProps = {
@@ -100,17 +108,22 @@ export const Documents = () => {
         window.location.href=`${awsUrl}${file}`;
     }
 
+    const canEdit =  userGroups.find((group: any) => group.GroupName === 'editors');
+
     return (
         <Paper className={classes.paper}>
-            <Button
+            {canEdit
+             ?
+                <Button
                 variant="contained"
                 color="primary"
                 className={classes.button}
                 startIcon={<CloudUploadIcon />}
                 onClick={uploadFile}
-            >
+                >
                 Upload
-            </Button>
+              </Button>
+             : ''}
             <Divider />
             {!state.loadingFiles ? <DisplayTree {...displayTreeProps} /> : <DisplaySkeleton />}
             <AlertDialog {...alertDialogProps} />
