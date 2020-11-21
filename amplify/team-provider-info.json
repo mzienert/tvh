@@ -22,5 +22,33 @@
                 "tvh65a708c6": {}
             }
         }
+    },
+    "master": {
+        "awscloudformation": {
+            "AuthRoleName": "amplify-tvh-master-44416-authRole",
+            "UnauthRoleArn": "arn:aws:iam::153218834330:role/amplify-tvh-master-44416-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::153218834330:role/amplify-tvh-master-44416-authRole",
+            "Region": "us-west-2",
+            "DeploymentBucketName": "amplify-tvh-master-44416-deployment",
+            "UnauthRoleName": "amplify-tvh-master-44416-unauthRole",
+            "StackName": "amplify-tvh-master-44416",
+            "StackId": "arn:aws:cloudformation:us-west-2:153218834330:stack/amplify-tvh-master-44416/bbb75870-2ae3-11eb-b62e-02f97eddb891",
+            "AmplifyAppId": "d2hu7txp9echde"
+        },
+        "categories": {
+            "auth": {
+                "tvh65a708c6": {},
+                "userPoolGroups": {}
+            },
+            "function": {
+                "AdminQueries165817c8": {}
+            },
+            "hosting": {
+                "amplifyhosting": {
+                    "appId": "d2hu7txp9echde",
+                    "type": "cicd"
+                }
+            }
+        }
     }
 }

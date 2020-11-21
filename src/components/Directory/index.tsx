@@ -4,6 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import { UserCard } from './UserCard';
 import { UserList } from "./UserList";
 import { UserFormProps, UserListProps } from "./UserProps";
+import { setLoading } from "../../redux/actions";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -33,7 +34,8 @@ export const Directory = () => {
     }
 
     const userFormProps: UserFormProps = {
-        selectedUser
+        selectedUser,
+        setLoading,
     }
 
     return (

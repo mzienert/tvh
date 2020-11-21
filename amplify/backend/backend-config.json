@@ -1,77 +1,100 @@
 {
-    "auth": {
-        "tvh65a708c6": {
-            "service": "Cognito",
-            "providerPlugin": "awscloudformation",
-            "dependsOn": [],
-            "customAuth": false
-        },
-        "userPoolGroups": {
-            "service": "Cognito-UserPool-Groups",
-            "providerPlugin": "awscloudformation",
-            "dependsOn": [
-                {
-                    "category": "auth",
-                    "resourceName": "tvh65a708c6",
-                    "attributes": [
-                        "UserPoolId",
-                        "AppClientIDWeb",
-                        "AppClientID",
-                        "IdentityPoolId"
-                    ]
-                }
-            ]
-        }
-    },
-    "hosting": {
-        "amplifyhosting": {
-            "service": "amplifyhosting",
-            "type": "cicd"
-        }
-    },
-    "storage": {
-        "s3145fe5ca": {
-            "service": "S3",
-            "providerPlugin": "awscloudformation"
-        }
-    },
-    "function": {
-        "AdminQueries165817c8": {
-            "service": "Lambda",
-            "providerPlugin": "awscloudformation",
-            "build": true,
-            "dependsOn": [
-                {
-                    "category": "auth",
-                    "resourceName": "tvh65a708c6",
-                    "attributes": [
-                        "UserPoolId"
-                    ]
-                }
-            ]
-        }
-    },
-    "api": {
-        "AdminQueries": {
-            "service": "API Gateway",
-            "providerPlugin": "awscloudformation",
-            "dependsOn": [
-                {
-                    "category": "auth",
-                    "resourceName": "tvh65a708c6",
-                    "attributes": [
-                        "UserPoolId"
-                    ]
-                },
-                {
-                    "category": "function",
-                    "resourceName": "AdminQueries165817c8",
-                    "attributes": [
-                        "Arn",
-                        "Name"
-                    ]
-                }
-            ]
-        }
-    }
+	"auth": {
+		"tvh65a708c6": {
+			"service": "Cognito",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [],
+			"customAuth": false
+		},
+		"userPoolGroups": {
+			"service": "Cognito-UserPool-Groups",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [
+				{
+					"category": "auth",
+					"resourceName": "tvh65a708c6",
+					"attributes": [
+						"UserPoolId",
+						"AppClientIDWeb",
+						"AppClientID",
+						"IdentityPoolId"
+					]
+				}
+			]
+		}
+	},
+	"hosting": {
+		"amplifyhosting": {
+			"service": "amplifyhosting",
+			"type": "cicd"
+		}
+	},
+	"storage": {
+		"s304d78527": {
+			"service": "S3",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [
+				{
+					"category": "auth",
+					"resourceName": "tvh65a708c6",
+					"attributes": [
+						"UserPoolId"
+					]
+				},
+				{
+					"category": "auth",
+					"resourceName": "userPoolGroups",
+					"attributes": [
+						"adminGroupRole"
+					]
+				},
+				{
+					"category": "auth",
+					"resourceName": "userPoolGroups",
+					"attributes": [
+						"editorsGroupRole"
+					]
+				}
+			]
+		}
+	},
+	"function": {
+		"AdminQueries165817c8": {
+			"service": "Lambda",
+			"providerPlugin": "awscloudformation",
+			"build": true,
+			"dependsOn": [
+				{
+					"category": "auth",
+					"resourceName": "tvh65a708c6",
+					"attributes": [
+						"UserPoolId"
+					]
+				}
+			]
+		}
+	},
+	"api": {
+		"AdminQueries": {
+			"service": "API Gateway",
+			"providerPlugin": "awscloudformation",
+			"dependsOn": [
+				{
+					"category": "auth",
+					"resourceName": "tvh65a708c6",
+					"attributes": [
+						"UserPoolId"
+					]
+				},
+				{
+					"category": "function",
+					"resourceName": "AdminQueries165817c8",
+					"attributes": [
+						"Arn",
+						"Name"
+					]
+				}
+			]
+		}
+	}
 }

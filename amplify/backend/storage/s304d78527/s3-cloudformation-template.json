@@ -81,8 +81,31 @@
 		},
 		"triggerFunction": {
 			"Type": "String"
-		}
+		},
 	
+    
+    
+        "authtvh65a708c6UserPoolId": {
+            "Type": "String",
+            "Default": "authtvh65a708c6UserPoolId"
+        },
+        
+        
+    
+        "authuserPoolGroupsadminGroupRole": {
+            "Type": "String",
+            "Default": "authuserPoolGroupsadminGroupRole"
+        },
+        
+        
+    
+        "authuserPoolGroupseditorsGroupRole": {
+            "Type": "String",
+            "Default": "authuserPoolGroupseditorsGroupRole"
+        }
+        
+        
+    
 
 	},
 	"Conditions": {
@@ -230,6 +253,94 @@
 				}
 			}
 		},
+      
+      
+	    "adminGroupPolicy": {
+	      "Type": "AWS::IAM::Policy",
+	      "Properties": {
+	        "PolicyName": "admin-group-s3-policy",
+	        "Roles": [
+	        	{
+                    "Fn::Join": [
+                        "",
+                        [
+                          {
+                            "Ref": "authtvh65a708c6UserPoolId"
+                          },
+                          "-adminGroupRole"
+                        ]
+                    ]
+                }
+	        ],
+	        "PolicyDocument": {
+	          "Version": "2012-10-17",
+	          "Statement": [
+	            {
+	              "Effect": "Allow",
+	              "Action": ["s3:PutObject","s3:GetObject","s3:ListBucket"],
+	              "Resource": [
+	                  {
+	                      "Fn::Join": [
+	                          "",
+	                          [
+	                              "arn:aws:s3:::",
+	                              {
+	                                  "Ref": "S3Bucket"
+	                              },
+	                              "/*"
+	                          ]
+	                      ]
+	                  }
+	              ]
+	            }
+	          ]
+	        }
+	      }
+	    },
+      
+	    "editorsGroupPolicy": {
+	      "Type": "AWS::IAM::Policy",
+	      "Properties": {
+	        "PolicyName": "editors-group-s3-policy",
+	        "Roles": [
+	        	{
+                    "Fn::Join": [
+                        "",
+                        [
+                          {
+                            "Ref": "authtvh65a708c6UserPoolId"
+                          },
+                          "-editorsGroupRole"
+                        ]
+                    ]
+                }
+	        ],
+	        "PolicyDocument": {
+	          "Version": "2012-10-17",
+	          "Statement": [
+	            {
+	              "Effect": "Allow",
+	              "Action": ["s3:GetObject","s3:ListBucket"],
+	              "Resource": [
+	                  {
+	                      "Fn::Join": [
+	                          "",
+	                          [
+	                              "arn:aws:s3:::",
+	                              {
+	                                  "Ref": "S3Bucket"
+	                              },
+	                              "/*"
+	                          ]
+	                      ]
+	                  }
+	              ]
+	            }
+	          ]
+	        }
+	      }
+	    },
+      
       
 	    
 		"S3AuthPublicPolicy": {
