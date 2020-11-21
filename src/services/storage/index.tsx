@@ -20,6 +20,8 @@ export const getFile = async (file: any) => {
         })
 }
 
+// TODO: this probably wont work on ie or safari
+// https://docs.amplify.aws/lib/storage/download/q/platform/js#file-download-option
 export function downloadBlob(blob: any, filename: any) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');

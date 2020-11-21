@@ -4,4 +4,5 @@ export type UserListProps = {
 
 export type UserFormProps = {
     selectedUser: string
+    setLoading: Function,
 }

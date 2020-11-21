@@ -15,8 +15,8 @@ import FilledInput from "@material-ui/core/FilledInput";
 import FormControl from "@material-ui/core/FormControl";
 import { Grid } from "@material-ui/core";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
-import { showSnackbar } from "../../redux/actions";
+import {useDispatch, useSelector} from "react-redux";
+import {setLoading, showSnackbar} from "../../redux/actions";
 import {getCurrentUserAttributes, getUserList, updateCurrentUserAttributes} from "../../services/auth";
 import { buildAddressString, getUserAttributeValue } from "../../helpers";
 
@@ -51,6 +51,7 @@ export type UserForm = {
 }
 
 export const UserCard = (props: UserFormProps) => {
+    console.log('setLoading: ', setLoading);
     const classes = useStyles();
     const dispatch = useDispatch();
     const [state, setState] = useState({
@@ -153,6 +154,10 @@ export const UserCard = (props: UserFormProps) => {
         });
     }, [props.selectedUser])
 
+    const { isLoading } = useSelector(
+        (state: any) => state.ui
+    );
+
     const onSubmit = async (userForm: UserForm) => {
         const formattedAddress = buildAddressString(userForm);
         const userAttributes = {
@@ -162,13 +167,14 @@ export const UserCard = (props: UserFormProps) => {
             phone_number: `+1${userForm.phone.trim().replace(/\D/g,'')}`,
             address: formattedAddress,
         }
+        dispatch(setLoading())
         updateCurrentUserAttributes(userAttributes).then(res => {
             if (res.code) {
                 dispatch(showSnackbar(res.message, 'error'));
             }
+            dispatch(setLoading())
             dispatch(showSnackbar('Contact information updated.', 'info'));
         })
-
     }
 
     return (
@@ -423,6 +429,7 @@ export const UserCard = (props: UserFormProps) => {
                         variant="contained"
                         startIcon={<CloudUploadIcon />}
                         type="submit"
+                        disabled={isLoading}
                         >
                         Save
                     </Button>
