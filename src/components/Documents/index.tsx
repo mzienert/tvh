@@ -103,11 +103,6 @@ export const Documents = () => {
         dispatch(formDialog());
     };
 
-    const downloadFile = (file: string) => {
-        const awsUrl = 'https://tvh18afe5eae1ad44429cdbc502eb2fafa844416-master.s3-us-west-2.amazonaws.com/public/';
-        window.location.href=`${awsUrl}${file}`;
-    }
-
     const canEdit =  userGroups.find((group: any) => group.GroupName === 'admin');
 
     return (
