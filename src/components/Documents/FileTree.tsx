@@ -8,6 +8,7 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import { SvgIconProps } from '@material-ui/core/SvgIcon';
+import { getFile } from "../../services/storage";
 
 declare module 'csstype' {
     interface Properties {
@@ -141,6 +142,10 @@ export const DisplayTree = (props: DisplayTreeProps) => {
 
     }, [props]);
 
+    const downloadFile = (file: any) => {
+        getFile(file);
+    }
+
     if (state.directories.length) {
         return (
             <TreeView
@@ -163,6 +168,7 @@ export const DisplayTree = (props: DisplayTreeProps) => {
                                 labelInfo={formatDate(file.lastModified)}
                                 color="#1a73e8"
                                 bgColor="#e8f0fe"
+                                onClick={() => downloadFile(file)}
                             />
                         ))}
                     </StyledTreeItem>

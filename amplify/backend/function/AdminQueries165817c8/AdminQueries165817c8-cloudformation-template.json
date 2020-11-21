@@ -52,7 +52,7 @@
 						"ENV": {
 							"Ref": "env"
 						},
-						"GROUP": "admin",
+						"GROUP": "editors",
 						"USERPOOL": {
 							"Ref": "authtvh65a708c6UserPoolId"
 						}
@@ -67,7 +67,7 @@
 				"Runtime": "nodejs10.x",
 				"Timeout": "25",
 				"Code": {
-					"S3Bucket": "amplify-tvh-dev-205639-deployment",
+					"S3Bucket": "amplify-tvh-master-44416-deployment",
 					"S3Key": "amplify-builds/AdminQueries165817c8-646269694f4d65554434-build.zip"
 				}
 			}

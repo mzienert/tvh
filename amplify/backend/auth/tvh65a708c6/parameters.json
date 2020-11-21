@@ -1,6 +1,6 @@
 {
     "identityPoolName": "tvh65a708c6_identitypool_65a708c6",
-    "allowUnauthenticatedIdentities": true,
+    "allowUnauthenticatedIdentities": false,
     "resourceNameTruncated": "tvh65a708c6",
     "userPoolName": "tvh65a708c6_userpool_65a708c6",
     "autoVerifiedAttributes": [

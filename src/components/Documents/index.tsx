@@ -108,7 +108,7 @@ export const Documents = () => {
         window.location.href=`${awsUrl}${file}`;
     }
 
-    const canEdit =  userGroups.find((group: any) => group.GroupName === 'editors');
+    const canEdit =  userGroups.find((group: any) => group.GroupName === 'admin');
 
     return (
         <Paper className={classes.paper}>
