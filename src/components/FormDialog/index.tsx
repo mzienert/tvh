@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { DropzoneArea } from 'material-ui-dropzone';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -16,7 +16,7 @@ import {
     showSnackbar,
 } from "../../redux/actions";
 import { FormDialogProps } from "./FormDialogProps.d";
-import {addFiles, listFiles} from '../../services/storage';
+import { addFiles, listFiles } from '../../services/storage';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import {
     createStyles,
@@ -38,7 +38,7 @@ import Divider from "@material-ui/core/Divider";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
 import CancelIcon from '@material-ui/icons/Cancel';
-import {listDirectories} from "../../helpers";
+import { listDirectories } from "../../helpers";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -246,7 +246,21 @@ export const FormDialog = (props: FormDialogProps) => {
                           </div> }
                     <DropzoneArea onChange={handleChange}
                                   maxFileSize={15000000}
-                                  acceptedFiles={['image/jpeg', 'image/png', 'image/bmp']} //application/pdf
+                                  acceptedFiles={[
+                                      'image/jpeg',
+                                      'image/png',
+                                      'image/bmp',
+                                      'application/pdf',
+                                      'application/xlsx',
+                                      '.csv',
+                                      'text/csv',
+                                      'application/vnd.ms-excel',
+                                      'application/csv',
+                                      'text/x-csv',
+                                      'application/x-csv',
+                                      'text/comma-separated-values', 
+                                      'text/x-comma-separated-values'
+                                  ]}
                     />
                 </DialogContent>
                 <DialogActions>
