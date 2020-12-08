@@ -92,7 +92,7 @@ export const UserCard = (props: UserFormProps) => {
             if (selectedUserEqCurrentUser) {
                 setValue('firstName', name.Value);
                 setValue('lastName', familyName.Value);
-                setValue('phone', phone.Value);
+                setValue('phone', phone.Value.slice(2));
                 setValue('address', addressArray[0]);
                 setValue('city', addressArray[1]);
                 setValue('state', addressArray[2]);
@@ -118,7 +118,7 @@ export const UserCard = (props: UserFormProps) => {
                     firstName,
                     lastName,
                     email,
-                    phone,
+                    phone: phone.slice(2),
                     address: addressArray[0],
                     city: addressArray[1],
                     state: addressArray[2],
