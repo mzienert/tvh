@@ -247,9 +247,13 @@ export const FormDialog = (props: FormDialogProps) => {
                     <DropzoneArea onChange={handleChange}
                                   maxFileSize={15000000}
                                   acceptedFiles={[
-                                      'image/jpeg',
-                                      'image/png',
-                                      'image/bmp',
+                                      'image/*',
+                                      '.doc',
+                                      '.docx',
+                                      '.xml',
+                                      'application/msword',
+                                      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                                      '.pdf',
                                       'application/pdf',
                                       'application/xlsx',
                                       '.csv',
@@ -258,7 +262,7 @@ export const FormDialog = (props: FormDialogProps) => {
                                       'application/csv',
                                       'text/x-csv',
                                       'application/x-csv',
-                                      'text/comma-separated-values', 
+                                      'text/comma-separated-values',
                                       'text/x-comma-separated-values'
                                   ]}
                     />
